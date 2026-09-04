@@ -1,0 +1,36 @@
+function init(self)
+	self.is_showing = true
+
+	-- 填滿並保持比例，超出部分留黑邊
+	msg.post("@render:", "use_fixed_fit_projection", { near = -1, far = 1 })
+	msg.post(".", "acquire_input_focus")
+end
+
+function on_input(self, action_id, action)
+	if not self.is_showing then
+		return false
+	end
+
+	if not action.pressed then
+		return false
+	end
+
+	if action_id == hash("next_level") then
+		print("Starting game")
+
+		self.is_showing = false
+
+		local panel = gui.get_node("title_panel")
+
+		gui.set_enabled(panel, false)
+		gui.set_visible(panel, false)
+
+		msg.post(".", "release_input_focus")
+
+		msg.post("/game#game", "start_game")
+
+		return true
+	end
+
+	return false
+end
