@@ -1,3 +1,5 @@
+local IS_FINISH = false
+
 -- 統一設定完成面板的可見性與啟用狀態，並更新腳本內部狀態
 local function gui_visible(self, visible) 
     -- 取得 GUI 節點 "complete_panel"
@@ -12,16 +14,28 @@ local function gui_visible(self, visible)
 end
 
 -- 顯示完成面板的輔助函式
-local function show_panel(self)
-    
+local function show_panel(self, is_finish)
+
     gui_visible(self, true)
     
-    sound.stop("/music#bgm")
+    if IS_FINISH then return end
     
-    sound.play("/music#victory", {}, function()
+    local music = "/music#victory"
+    local bgm = "/music#bgm"
+
+    sound.stop(bgm)
+    
+    if is_finish then
+        music = "music#finish"
+        bgm = "music#ending"
+     end
+
+    IS_FINISH = is_finish
+    
+    sound.play(music, {}, function()
         -- 向當前腳本所屬遊戲物件發送訊息，取得輸入焦點（讓 on_input 能接收輸入）
         msg.post(".", "acquire_input_focus")
-        sound.play("/music#bgm")
+        sound.play(bgm)
     end)
 end
 
@@ -39,7 +53,7 @@ local function show_level_complete(self, message)
     self.mode = "next_level"
 
     -- 顯示面板
-    show_panel(self)
+    show_panel(self, false)
 end
 
 -- 顯示「全部關卡完成」訊息
@@ -56,7 +70,7 @@ local function show_all_levels_complete(self, message)
     self.mode = "all_complete"
 
     -- 顯示面板
-    show_panel(self)
+    show_panel(self, true)
 end
 
 -- 隱藏完成面板
