@@ -23,4 +23,4 @@
 | 全破音效 | [OpenGameArt.org](https://opengameart.org/content/victory-song) |
 | 全破音樂 | [OpenGameArt.org](https://opengameart.org/content/rpg-towntravel-or-credits-song) |
 
-https://github.com/user-attachments/assets/c4006fe4-4fac-4089-b565-7805964dda95
+https://github.com/user-attachments/assets/195174a5-c982-4ea5-bbcb-a5ec11cdc867
