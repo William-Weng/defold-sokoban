@@ -66,3 +66,7 @@ gamepad_trigger {
   input: GAMEPAD_RPAD_DOWN
   action: "next_level"
 }
+touch_trigger {
+  input: TOUCH_MULTI
+  action: "touch"
+}

@@ -21,7 +21,11 @@ scale_mode = stretch
 
 [project]
 title = 倉庫番
-version = 1.0.0
+version = 0.1.2
 custom_resources = /assets/file/levels.json
-dependencies#0 = https://github.com/William-Weng/defold-utils/archive/refs/tags/0.1.0.zip
+dependencies#0 = https://github.com/William-Weng/defold-utils/archive/refs/tags/0.1.2.zip
+
+[ios]
+bundle_identifier = idv.william.sokoban
+bundle_version = 1.0.0
 

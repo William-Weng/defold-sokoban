@@ -1,6 +1,7 @@
 -- 載入自訂除錯輸出工具
 -- 之後可使用 dprint.print(...) 在 Console 顯示訊息
 local dprint = require("utility.debug_print")
+local helper = require("utility.msg_helpers")
 
 -- 載入關卡管理模組
 -- 負責玩家、箱子、目標點、移動、碰撞與過關判斷
@@ -44,7 +45,7 @@ local function start_game_action(self)
     self.is_started = true
 
     -- 填滿並保持比例，超出部分留黑邊
-    msg.post("@render:", "use_fixed_fit_projection", { near = -1, far = 1 })
+    helper.use_fixed_fit_projection(-1, 1)
     
     -- 呼叫 load_current_level 載入第一關的關卡資料與生成物件
     load_current_level(self)
@@ -78,7 +79,7 @@ local function try_move_action(self, message)
         -- 透過 Defold 的 msg.post 發送訊息到 "/hud#hud" 遊戲物件，讓 HUD 顯示關卡完成 UI
         -- world: 世界編號（此處固定為 1），level: 當前關卡編號
         
-        msg.post("/hud#hud", "show_level_complete", { world = 1, level = self.level_index })
+        helper.post("/hud#hud", "show_level_complete", { world = 1, level = self.level_index })
     end
 
     -- 無論是否移動成功，都回傳 true 表示此動作已處理完畢
@@ -97,7 +98,7 @@ local function next_level_action(self, message)
 
     -- 檢查是否已達或超過總關卡數；若是，表示所有關卡都已破完，印出提示並停止
     if self.level_index >= level_manager.level_count() then
-        msg.post("/hud#hud", "show_all_levels_complete", { world = 1, total_levels = level_manager.level_count() })
+        helper.post("/hud#hud", "show_all_levels_complete", { world = 1, total_levels = level_manager.level_count() })
         return true
     end
 
@@ -114,15 +115,12 @@ local function next_level_action(self, message)
     return true
 end
 
-function init(self)
-end
-
 -- 當目前 Game Object 收到訊息時呼叫
 --
 -- message_id: 訊息名稱的 hash，例如 hash("try_move")
 -- message: 訊息攜帶的資料，例如 { x = 1, y = 0 }
 function on_message(self, message_id, message)
-
+    
     if message_id == hash("start_game") then
         return start_game_action(self)
     end

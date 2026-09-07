@@ -1,3 +1,8 @@
+-- 載入自訂除錯輸出工具
+-- 之後可使用 dprint.print(...) 在 Console 顯示訊息
+local dprint = require("utility.debug_print")
+local helper = require("utility.msg_helpers")
+
 local IS_FINISH = false
 
 -- 統一設定完成面板的可見性與啟用狀態，並更新腳本內部狀態
@@ -31,10 +36,13 @@ local function show_panel(self, is_finish)
      end
 
     IS_FINISH = is_finish
+
+    dprint.print(music)
     
     sound.play(music, {}, function()
         -- 向當前腳本所屬遊戲物件發送訊息，取得輸入焦點（讓 on_input 能接收輸入）
-        msg.post(".", "acquire_input_focus")
+        helper.acquire_input_focus()
+        dprint.print(bgm)
         sound.play(bgm)
     end)
 end
@@ -79,7 +87,7 @@ local function hide_panel(self)
     gui_visible(self, false)
     
     -- 釋放輸入焦點（之後 on_input 不會再收到輸入）
-    msg.post(".", "release_input_focus")
+    helper.release_input_focus()
 end
 
 -- 初始化函式：在腳本啟動時呼叫
@@ -112,13 +120,13 @@ function on_input(self, action_id, action)
     end
 
     -- 若輸入是 "next_level" 或 "confirm"（例如 Enter / Space）
-    if action_id == hash("next_level") or action_id == hash("confirm") then
+    if action_id == hash("next_level") or action_id == hash("confirm") or (action.touch and #action.touch == 1) then
 
         -- 隱藏面板
         hide_panel(self)
 
         -- 向遊戲腳本發送 "next_level" 訊息，觸發下一關
-        msg.post("/game#game", "next_level")
+        helper.post("/game#game", "next_level")
 
         -- 表示此輸入已被處理
         return true
